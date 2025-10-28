@@ -1,11 +1,6 @@
 import mongoose from 'mongoose';
 
 const commentSchema = new mongoose.Schema({
-  id: {
-    type: String,
-    required: true,
-    unique: true
-  },
   author: {
     type: String,
     required: true

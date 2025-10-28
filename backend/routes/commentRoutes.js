@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
 // GET single comment by ID
 router.get('/:id', async (req, res) => {
   try {
-    const comment = await Comment.findOne({ id: req.params.id });
+    const comment = await Comment.findById(req.params.id);
     if (!comment) {
       return res.status(404).json({ error: 'Comment not found' });
     }
@@ -29,7 +29,11 @@ router.get('/:id', async (req, res) => {
 // POST create new comment
 router.post('/', async (req, res) => {
   try {
-    const comment = new Comment(req.body);
+    const commentData = {
+      ...req.body,
+      date: req.body.date ? new Date(req.body.date) : new Date()
+    };
+    const comment = new Comment(commentData);
     const savedComment = await comment.save();
     res.status(201).json(savedComment);
   } catch (error) {
@@ -40,8 +44,8 @@ router.post('/', async (req, res) => {
 // PUT update comment by ID
 router.put('/:id', async (req, res) => {
   try {
-    const comment = await Comment.findOneAndUpdate(
-      { id: req.params.id },
+    const comment = await Comment.findByIdAndUpdate(
+      req.params.id,
       req.body,
       { new: true, runValidators: true }
     );
@@ -57,7 +61,7 @@ router.put('/:id', async (req, res) => {
 // DELETE comment by ID
 router.delete('/:id', async (req, res) => {
   try {
-    const comment = await Comment.findOneAndDelete({ id: req.params.id });
+    const comment = await Comment.findByIdAndDelete(req.params.id);
     if (!comment) {
       return res.status(404).json({ error: 'Comment not found' });
     }
