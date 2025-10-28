@@ -87,7 +87,7 @@ const Comments = () => {
     fetchComments();
   }, []);
 
-  if (loading) return <div className="p-4">Loading...</div>;
+  if (loading) return <div className="p-4 h-screen flex items-center justify-center">Loading...</div>;
 
   return (
     <div className="max-w-2xl mx-auto p-4">
