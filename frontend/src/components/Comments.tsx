@@ -50,12 +50,12 @@ const Comments = () => {
         body: JSON.stringify(commentData)
       });
       const data = await response.json();
-      setComments([data, ...comments]);
+      setComments(prev => [data, ...prev]);
       setNewComment('');
     } catch (error) {
       console.error('Error adding comment:', error);
     }
-  }, [comments, newComment, newAuthor]);
+  }, [newComment, newAuthor]);
 
   // Update comment
   const updateComment = useCallback(async (id: string, text: string) => {
@@ -66,11 +66,11 @@ const Comments = () => {
         body: JSON.stringify({ text })
       });
       const updated = await response.json();
-      setComments(comments.map(c => c._id === id ? updated : c));
+      setComments(prev => prev.map(c => c._id === id ? updated : c));
     } catch (error) {
       console.error('Error updating comment:', error);
     }
-  }, [comments]);
+  }, []);
 
   // Delete comment
   const deleteComment = useCallback(async (id: string) => {
@@ -78,11 +78,11 @@ const Comments = () => {
       await fetch(`${API_URL}/${id}`, {
         method: 'DELETE'
       });
-      setComments(comments.filter(c => c._id !== id));
+      setComments(prev => prev.filter(c => c._id !== id));
     } catch (error) {
       console.error('Error deleting comment:', error);
     }
-  }, [comments]);
+  }, []);
 
   useEffect(() => {
     fetchComments();
