@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import React from 'react';
 
 interface Comment {
   _id: string;
@@ -15,7 +16,7 @@ interface Props {
   onDelete: (id: string) => void;
 }
 
-const SingleComment = ({ comment, onUpdate, onDelete }: Props) => {
+const SingleComment = React.memo(({ comment, onUpdate, onDelete }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(comment.text);
 
@@ -106,7 +107,7 @@ const SingleComment = ({ comment, onUpdate, onDelete }: Props) => {
       )}
     </div>
   );
-};
+});
 
 export default SingleComment;
 

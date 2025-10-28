@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import SingleComment from './SingleComment';
 
 interface Comment {
@@ -9,16 +9,17 @@ interface Comment {
   likes: number;
   image: string;
 }
+const API_URL = 'http://localhost:3000/api/comments';
 
 const Comments = () => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
   const [newComment, setNewComment] = useState('');
   const [newAuthor, setNewAuthor] = useState('Admin');
-  const API_URL = 'http://localhost:3000/api/comments';
+
 
   // Fetch comments
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     try {
       const response = await fetch(API_URL);
       const data = await response.json();
@@ -28,10 +29,10 @@ const Comments = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   // Add new comment
-  const addComment = async () => {
+  const addComment = useCallback(async () => {
     if (!newComment.trim()) return;
     
     const commentData = {
@@ -54,10 +55,10 @@ const Comments = () => {
     } catch (error) {
       console.error('Error adding comment:', error);
     }
-  };
+  }, [comments, newComment, newAuthor]);
 
   // Update comment
-  const updateComment = async (id: string, text: string) => {
+  const updateComment = useCallback(async (id: string, text: string) => {
     try {
       const response = await fetch(`${API_URL}/${id}`, {
         method: 'PUT',
@@ -69,10 +70,10 @@ const Comments = () => {
     } catch (error) {
       console.error('Error updating comment:', error);
     }
-  };
+  }, [comments]);
 
   // Delete comment
-  const deleteComment = async (id: string) => {
+  const deleteComment = useCallback(async (id: string) => {
     try {
       await fetch(`${API_URL}/${id}`, {
         method: 'DELETE'
@@ -81,7 +82,7 @@ const Comments = () => {
     } catch (error) {
       console.error('Error deleting comment:', error);
     }
-  };
+  }, [comments]);
 
   useEffect(() => {
     fetchComments();
