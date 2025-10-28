@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import connectDB from './config/database.js';
 import commentRoutes from './routes/commentRoutes.js';
 
@@ -12,6 +13,7 @@ const PORT = process.env.PORT || 3000;
 connectDB();
 
 // Middleware
+app.use(cors());
 app.use(express.json());
 
 // Routes
