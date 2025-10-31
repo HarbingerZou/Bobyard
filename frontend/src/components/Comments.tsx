@@ -1,13 +1,16 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, type ReactElement } from 'react';
 import SingleComment from './SingleComment';
 
 interface Comment {
   _id: string;
+  id:string;
+  parent:string;
   author: string;
   text: string;
   date: string;
   likes: number;
   image: string;
+  children?:Comment[]
 }
 const API_URL = 'http://localhost:3000/api/comments';
 
@@ -16,13 +19,14 @@ const Comments = () => {
   const [loading, setLoading] = useState(true);
   const [newComment, setNewComment] = useState('');
   const [newAuthor, setNewAuthor] = useState('Admin');
-
+  const [commentsC, setCommentsC] = useState<ReactElement[]>([]) 
 
   // Fetch comments
   const fetchComments = useCallback(async () => {
     try {
-      const response = await fetch(API_URL);
+      const response = await fetch(`${API_URL}/nested`);
       const data = await response.json();
+      console.log(data)
       setComments(data);
     } catch (error) {
       console.error('Error fetching comments:', error);
@@ -120,14 +124,9 @@ const Comments = () => {
 
       {/* Comments List */}
       <div className="space-y-4">
-        {comments.map((comment) => (
-          <SingleComment
-            key={comment._id}
-            comment={comment}
-            onUpdate={updateComment}
-            onDelete={deleteComment}
-          />
-        ))}
+        {comments.map(comment=>
+          <SingleComment comment={comment} />
+        )}
       </div>
     </div>
   );

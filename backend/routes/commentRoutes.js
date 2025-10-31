@@ -13,6 +13,34 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/nested', async (req, res) => {
+  try {
+    const comments_raw = await Comment.find().sort({ date: -1 });
+    const comments = JSON.parse(JSON.stringify(comments_raw))
+    const map = new Map()
+    for(const comment of comments){
+      map.set(comment.id, comment)
+    }
+    for(const comment of comments){
+      const p_id = comment.parent
+      const parent = map.get(p_id)
+      if(!parent){
+        continue
+      }
+      if(!parent.children){
+        parent.children = []
+      }
+      parent.children.push(comment)
+    }
+    const output = comments.filter(c=>c.parent === "")
+    //console.log(JSON.parse(JSON.stringify(root)))
+    res.json(output);
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // GET single comment by ID
 router.get('/:id', async (req, res) => {
   try {
@@ -70,6 +98,5 @@ router.delete('/:id', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
 export default router;
 

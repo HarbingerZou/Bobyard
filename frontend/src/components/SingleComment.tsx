@@ -3,27 +3,24 @@ import React from 'react';
 
 interface Comment {
   _id: string;
+  id:string;
+  parent:string;
   author: string;
   text: string;
   date: string;
   likes: number;
   image: string;
+  children?:Comment[]
 }
 
 interface Props {
   comment: Comment;
-  onUpdate: (id: string, updatedText: string) => void;
-  onDelete: (id: string) => void;
 }
 
-const SingleComment = React.memo(({ comment, onUpdate, onDelete }: Props) => {
+const SingleComment = React.memo(({ comment}: Props) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(comment.text);
 
-  const handleSave = () => {
-    onUpdate(comment._id, editText);
-    setIsEditing(false);
-  };
 
   const handleCancel = () => {
     setEditText(comment.text);
@@ -39,50 +36,7 @@ const SingleComment = React.memo(({ comment, onUpdate, onDelete }: Props) => {
             {new Date(comment.date).toLocaleString()}
           </p>
         </div>
-        <div className="flex gap-2">
-          {!isEditing && (
-            <>
-              <button
-                onClick={() => setIsEditing(true)}
-                className="px-2 py-1 bg-yellow-500 text-white rounded text-sm hover:bg-yellow-600"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => onDelete(comment._id)}
-                className="px-2 py-1 bg-red-500 text-white rounded text-sm hover:bg-red-600"
-              >
-                Delete
-              </button>
-            </>
-          )}
-        </div>
       </div>
-      
-      {isEditing ? (
-        <div>
-          <textarea
-            value={editText}
-            onChange={(e) => setEditText(e.target.value)}
-            className="w-full p-2 border rounded mb-2"
-            rows={3}
-          />
-          <div className="flex gap-2">
-            <button
-              onClick={handleSave}
-              className="px-3 py-1 bg-green-500 text-white rounded text-sm hover:bg-green-600"
-            >
-              Save
-            </button>
-            <button
-              onClick={handleCancel}
-              className="px-3 py-1 bg-gray-500 text-white rounded text-sm hover:bg-gray-600"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      ) : (
         <>
           <p className="text-gray-700 mb-2">{comment.text}</p>
           
@@ -103,8 +57,17 @@ const SingleComment = React.memo(({ comment, onUpdate, onDelete }: Props) => {
             </svg>
             <span className="text-sm">{comment.likes} like{comment.likes !== 1 ? 's' : ''}</span>
           </div>
+          
+          {comment.children && 
+            <div>
+            {comment.children.map(comment=>{
+                return(
+                  <SingleComment comment={comment}/>
+                )}
+            )}
+          </div>
+          }  
         </>
-      )}
     </div>
   );
 });
