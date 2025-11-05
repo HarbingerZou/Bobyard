@@ -9,6 +9,7 @@ const commentSchema = new mongoose.Schema({
   parent:{
     type: String,
     required:true,
+    default:""
   },
   author: {
     type: String,

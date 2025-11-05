@@ -1,17 +1,6 @@
 import { useState } from 'react';
 import React from 'react';
-
-interface Comment {
-  _id: string;
-  id:string;
-  parent:string;
-  author: string;
-  text: string;
-  date: string;
-  likes: number;
-  image: string;
-  children?:Comment[]
-}
+import { API_URL } from '../config';
 
 interface Props {
   comment: Comment;

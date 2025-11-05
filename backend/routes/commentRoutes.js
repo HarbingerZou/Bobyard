@@ -61,6 +61,7 @@ router.post('/', async (req, res) => {
       ...req.body,
       date: req.body.date ? new Date(req.body.date) : new Date()
     };
+    console.log("Add comment: ", commentData)
     const comment = new Comment(commentData);
     const savedComment = await comment.save();
     res.status(201).json(savedComment);
