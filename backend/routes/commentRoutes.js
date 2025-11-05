@@ -4,6 +4,16 @@ import Comment from '../models/Comment.js';
 const router = express.Router();
 
 // GET all comments
+
+router.get('/count', async(req, res)=>{
+  try {
+    const count = await Comment.countDocuments();
+    res.json(count);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+})
+
 router.get('/', async (req, res) => {
   try {
     const comments = await Comment.find().sort({ date: -1 });

@@ -1,4 +1,13 @@
 import { API_URL } from './config';
+const getCommentsCounts = async (onComplete:(count:number)=>void) =>{
+  try {
+    const response = await fetch(`${API_URL}/count`);
+    const data = await response.json();
+    onComplete(data)
+  } catch (error) {
+    console.error('Error fetching comments:', error);
+  } 
+}
 const fetchComments = async (onComplete: (comments: CommentInterface[]) => void) => {
     try {
       const response = await fetch(`${API_URL}/nested`);
@@ -10,11 +19,11 @@ const fetchComments = async (onComplete: (comments: CommentInterface[]) => void)
 }
 
   // Add new comment
-const addComment = async (onComplete: (comment: CommentInterface) => void, newComment: string) => {
+const addComment = async (onComplete: (comment: CommentInterface) => void, newComment: string, id:number) => {
     if (!newComment.trim()) return;
     
     const commentData: CommentInterface = {
-      id: "986",
+      id: id.toString(),
       parent: '',
       author: "Admin",
       text: newComment,
@@ -65,4 +74,4 @@ const deleteComment = async (onComplete: (id: string) => void, id: string) => {
         console.error('Error deleting comment:', error);
     }
 }
-export { fetchComments, addComment, updateComment, deleteComment };
+export {getCommentsCounts, fetchComments, addComment, updateComment, deleteComment };
