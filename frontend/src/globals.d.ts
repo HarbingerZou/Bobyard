@@ -1,5 +1,5 @@
-interface Comment {
-    _id: string;
+interface CommentInterface {
+    _id?: string;
     id:string;
     parent:string;
     author: string;
@@ -7,5 +7,5 @@ interface Comment {
     date: string;
     likes: number;
     image: string;
-    children?:Comment[]
+    children?:CommentInterface[]
 }

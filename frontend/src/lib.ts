@@ -1,9 +1,8 @@
 import { API_URL } from './config';
-const fetchComments = async (onComplete: (comments: Comment[]) => void) => {
+const fetchComments = async (onComplete: (comments: CommentInterface[]) => void) => {
     try {
       const response = await fetch(`${API_URL}/nested`);
       const data = await response.json();
-      console.log(data)
       onComplete(data);
     } catch (error) {
       console.error('Error fetching comments:', error);
@@ -11,10 +10,12 @@ const fetchComments = async (onComplete: (comments: Comment[]) => void) => {
 }
 
   // Add new comment
-const addComment = async (onComplete: (comment: Comment) => void, newComment: string, setNewComment: (newComment: string) => void) => {
+const addComment = async (onComplete: (comment: CommentInterface) => void, newComment: string) => {
     if (!newComment.trim()) return;
     
-    const commentData = {
+    const commentData: CommentInterface = {
+      id: "986",
+      parent: '',
       author: "Admin",
       text: newComment,
       date: new Date().toISOString(),
@@ -29,15 +30,15 @@ const addComment = async (onComplete: (comment: Comment) => void, newComment: st
         body: JSON.stringify(commentData)
       });
       const data = await response.json();
-      onComplete(data);
-      setNewComment('');
+      console.log(data)
+      onComplete(commentData);
     } catch (error) {
       console.error('Error adding comment:', error);
     }
 }
 
   // Update comment
-const updateComment = async (onComplete: (comment: Comment) => void, id: string, text: string) => {
+const updateComment = async (onComplete: (comment: CommentInterface) => void, id: string, text: string) => {
     try {
         const response = await fetch(`${API_URL}/${id}`, {
         method: 'PUT',
@@ -45,6 +46,7 @@ const updateComment = async (onComplete: (comment: Comment) => void, id: string,
         body: JSON.stringify({ text })
         });
         const updated = await response.json();
+        console.log(updated)
         onComplete(updated);
     } catch (error) {
         console.error('Error updating comment:', error);
@@ -57,6 +59,7 @@ const deleteComment = async (onComplete: (id: string) => void, id: string) => {
         await fetch(`${API_URL}/${id}`, {
             method: 'DELETE'
         });
+        console.log(id)
         onComplete(id);
     } catch (error) {
         console.error('Error deleting comment:', error);

@@ -3,7 +3,7 @@ import React from 'react';
 import { API_URL } from '../config';
 
 interface Props {
-  comment: Comment;
+  comment: CommentInterface;
 }
 
 const SingleComment = React.memo(({ comment}: Props) => {

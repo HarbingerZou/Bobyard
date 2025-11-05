@@ -36,7 +36,7 @@ const Comments = () => {
           rows={3}
         />  
         <button
-          onClick={() => addComment((comment:Comment)=>{setComments([comment, ...comments])}, newComment, setNewComment)}
+          onClick={() => addComment((comment:Comment)=>{setComments(prev=>[comment, ...prev])}, newComment, setNewComment)}
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
           Add Comment
