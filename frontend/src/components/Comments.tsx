@@ -13,6 +13,38 @@ const Comments = () => {
     setLoading(false);
   }, []);
 
+  const updateComment = (
+    comments: CommentInterface[],
+    updatedComment: CommentInterface
+  ): CommentInterface[] => {
+    return comments.map((comment) => {
+      if (comment._id === updatedComment._id) {
+        return updatedComment;
+      }
+      return comment;
+    });
+  };
+
+  const deleteComment = (
+    comments: CommentInterface[],
+    updatedComment: CommentInterface
+  ): CommentInterface[] => {
+    const output: CommentInterface[] = comments.filter((comment) => {
+      if (comment._id === updatedComment._id) {
+        return false;
+      }
+      return true;
+    });
+    return output;
+  };
+  const handleCommentUpdate = (updatedComment: CommentInterface) => {
+    setComments((prevComments) => updateComment(prevComments, updatedComment));
+  };
+
+  const handleCommentDelete = (deletedComment: CommentInterface) => {
+    setComments((prevComments) => deleteComment(prevComments, deletedComment));
+    setCount((count) => count - 1);
+  };
   if (loading)
     return (
       <div className="p-4 h-screen flex items-center justify-center">
@@ -36,7 +68,12 @@ const Comments = () => {
       {/* Comments List */}
       <div className="space-y-4">
         {comments.map((comment) => (
-          <SingleComment key={comment._id} comment={comment} />
+          <SingleComment
+            key={comment._id}
+            comment={comment}
+            onCommentUpdate={handleCommentUpdate}
+            onCommentDelete={handleCommentDelete}
+          />
         ))}
       </div>
     </div>
